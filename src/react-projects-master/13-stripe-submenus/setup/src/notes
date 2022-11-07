@@ -1,0 +1,75 @@
+// Как отобразить всплывающее меню?
+
+import { useContext } from "react";
+import { AppContext } from "./context";
+import sublinks from "./data";
+
+// 1) Navbar.js
+// const {openSubmenu} = useContext(AppContext)
+ const displaySubmenu= (e)=>{
+    const page = e.target.textContext;
+    const tempBtn = e.target.getBoundingClientRect()
+    const center = (tempBtn.left + tempBtn.right)/2
+    const bottom = tempBtn.bottom-3;
+    openSubmenu(page, {center, bottom})
+ }
+
+
+//  2) context.js
+const [location, setLocation]= useState({})
+
+// const oppenSubmenu = (text, coordinates)=>{
+//     setLocation(coordinates)
+//     setIsSubmenuOpen(true)
+// console.log(coordinates)
+// }
+
+// 3) submenu.js
+const Submenu=()=>{
+    const {isSideMenuOpen, location}= useContext(AppContext)
+    const container = useRef(null)
+    useEffect(()=>{
+        const submenu = container.current;
+        const {center, bottom} = location
+        submenu.style.left =`${center}px`
+        submenu.style.top=`${bottom}px`
+    }, [location])
+    return (
+        <aside className={`${isSideMenuOpen ?'submenu show': 'submenu'}`} ref={container}>
+            submenu
+        </aside>
+    )
+}
+
+// 4) добавить state в context.js
+const [page, setPage]= useState({page:"", links: []})
+
+// 5) const openSubmenu
+const openSubmenu =(text, coordinates)=>{
+    const page = sublinks.find(link=>link.page ===text)
+    setPage(page)
+  
+}
+// не забыть передать page в value!!
+
+// 6) редактировать return navbar
+return
+<ul className='nav-links'>
+        <li>
+          <button className='link-btn' onMouseOver={displaySubmenu}>
+            products
+          </button>
+        </li>
+        <li>
+          <button className='link-btn' onMouseOver={displaySubmenu}>
+            developers
+          </button>
+        </li>
+        <li>
+          <button className='link-btn' onMouseOver={displaySubmenu}>
+            company
+          </button>
+        </li>
+      </ul>
+
+      
